@@ -1,0 +1,5 @@
+User Resource
+
+Get all Users 		->  GET	: /users
+Get specific user	-> 	GET : /users/{id}
+Create a User		->	POST: /users
