@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
 	private static List<User> users = new ArrayList<>();
+	private static int counter;
 
 	static {
 		users.add(new User(1, "Sachin", new Date()));
 		users.add(new User(2, "Virat", new Date()));
 		users.add(new User(3, "Ravichandra", new Date()));
+		counter = users.size();
 	}
 
 	public List<User> findAll() {
@@ -30,5 +32,12 @@ public class UserService {
 		} else {
 			return null;
 		}
+	}
+
+	public User save(User user) {
+		user.setId(++counter);
+		users.add(user);
+		return user;
+
 	}
 }
