@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import com.vinayak.restfulservice.exception.UserNotFoundException;
 
 @RestController
 public class UserResource {
@@ -26,17 +27,20 @@ public class UserResource {
 
 	@GetMapping("/users/{id}")
 	public User getUser(@PathVariable int id) {
-		return service.findOne(id);
+		User user = service.findOne(id);
+		if(user==null){
+			throw new UserNotFoundException(String.format("User not found for id %d",id));
+		}
+		return user;
 	}
 
 	@PostMapping("/users")
 	public ResponseEntity<Object> save(@RequestBody User user) {
-		User userId = service.save(user);
-		URI userURI = ServletUriComponentsBuilder.fromCurrentContextPath().path("/{id}")
-				.queryParam("id", userId.getId()).build().toUri();
-		ResponseEntity<Object> responseEntity = new ResponseEntity<>(HttpStatus.CREATED);
-		responseEntity.getHeaders().setLocation(userURI);
-		return responseEntity;
+		User savedUser = service.save(user);
+		URI userURI = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(savedUser.getId()).toUri();
+		return ResponseEntity.created(userURI).build();
+		
 	}
 
 }

@@ -25,7 +25,7 @@ public class UserService {
 	}
 
 	public User findOne(int id) {
-		Optional<User> userOptional = users.stream().peek(System.out::println)
+		Optional<User> userOptional = users.stream()
 				.filter(user -> user.getId().intValue() == id).findFirst();
 		if (userOptional.isPresent()) {
 			return userOptional.get();
