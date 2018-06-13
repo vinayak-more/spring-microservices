@@ -3,6 +3,8 @@ package com.vinayak.restfulservice.user;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,7 +38,7 @@ public class UserResource {
 	}
 
 	@PostMapping("/users")
-	public ResponseEntity<Object> save(@RequestBody User user) {
+	public ResponseEntity<Object> save(@Valid @RequestBody User user) {
 		User savedUser = service.save(user);
 		URI userURI = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId())
 				.toUri();
