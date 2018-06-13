@@ -25,8 +25,7 @@ public class UserService {
 	}
 
 	public User findOne(int id) {
-		Optional<User> userOptional = users.stream()
-				.filter(user -> user.getId().intValue() == id).findFirst();
+		Optional<User> userOptional = users.stream().filter(user -> user.getId().intValue() == id).findFirst();
 		if (userOptional.isPresent()) {
 			return userOptional.get();
 		} else {
@@ -39,5 +38,13 @@ public class UserService {
 		users.add(user);
 		return user;
 
+	}
+
+	public User delete(int id) {
+		User userToDelete = findOne(id);
+		if (userToDelete != null) {
+			users.remove(userToDelete);
+		}
+		return userToDelete;
 	}
 }

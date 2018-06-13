@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,8 +29,8 @@ public class UserResource {
 	@GetMapping("/users/{id}")
 	public User getUser(@PathVariable int id) {
 		User user = service.findOne(id);
-		if(user==null){
-			throw new UserNotFoundException(String.format("User not found for id %d",id));
+		if (user == null) {
+			throw new UserNotFoundException(String.format("User not found for id %d", id));
 		}
 		return user;
 	}
@@ -37,10 +38,18 @@ public class UserResource {
 	@PostMapping("/users")
 	public ResponseEntity<Object> save(@RequestBody User user) {
 		User savedUser = service.save(user);
-		URI userURI = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(savedUser.getId()).toUri();
+		URI userURI = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId())
+				.toUri();
 		return ResponseEntity.created(userURI).build();
-		
+
+	}
+
+	@DeleteMapping("/users/{id}")
+	public void delete(@PathVariable int id) {
+		User deletedUser = service.delete(id);
+		if (deletedUser == null) {
+			throw new UserNotFoundException(String.format("User not found for id %d", id));
+		}
 	}
 
 }
